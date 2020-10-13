@@ -35,3 +35,26 @@ JavaScript, используемые в приложении. По умолча�
 
 В корне проекта также находится Файл Web.config - файл конфигурации
 приложения.
+
+### 2. Добавим модели
+В каталог Models добавим 2 класса моделей:
+1. модель товара
+```c#
+public class Product
+{
+    public int ID { get; set; }
+    public string Name { get; set; }
+    public int Price { get; set; }
+}
+```
+2. модель покупки 
+```c#
+public class Purchase
+{
+    public int ID { get; set; }
+    public int ProductID { get; set; }
+    public string Person { get; set; }
+    public string Address { get; set; }
+    public DateTime Date { get; set; }
+}
+```
