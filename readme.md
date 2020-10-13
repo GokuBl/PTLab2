@@ -178,3 +178,63 @@ public class ShopInitializer : DropCreateDatabaseAlways<ShopContext>
 ...
 </entityFramework>
 ```
+
+### 6. Добавляем недостающие страницы
+Приложение можно запустить и увидеть в браузере, как выглядит
+домашняя страница. На данной странице уже есть ссылки для покупки товаров, однако если нажать на любую из них, то будет выведена ошибка, т. к. пока что нет соответствующей страницы. Исправим это дополнив код контроллера домашней страницы двумя методами:
+```c#
+[HttpGet]
+public ActionResult Buy(int id)
+{
+    ViewBag.ProductId = id;
+    return View();
+}
+
+[HttpPost]
+public string Buy(Purchase purchase)
+{
+    purchase.Date = DateTime.Now;
+    db.Purchases.Add(purchase);
+    db.SaveChanges();
+    return "Спасибо за покупку, " + purchase.Person + "!";
+}
+```
+Здесь мы определили одно действие Buy, однако в одном случае оно выполняется при получении запроса GET, а во втором случае - при получении запроса POST, что мы и определили с помощью атрибутов `[HttpGet]` и `[HttpPost]`.
+
+Первый метод принимает id выбранного товара и возвращает для него соответствующее представление. Второй принимает переданную ему в запросе POST модель purchase и добавляет ее в базу данных. В конце мы возвращаем строку сообщения. Также необходимо добавить представление Buy. Это можно сделать через контекстное меню для соответствующего метода контроллера.
+
+Код представления будет следующим:
+```html
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Покупка</title>
+</head>
+<body>
+    <div>
+        <h3>Покупка</h3>
+        <form method="post">
+            <input type="hidden" value="@ViewBag.ProductId" name="ProductID" />
+            <table>
+                <tr>
+                    <td><p>Введите свое имя </p></td>
+                    <td><input type="text" name="Person" /> </td>
+                </tr>
+                <tr>
+                    <td><p>Введите адрес доставки:</p></td>
+                    <td>
+                        <input type="text" name="Address" />
+                    </td>
+                </tr>
+                <tr><td><input type="submit" value="Отправить" /> </td><td></td></tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
+```
+Снова запускаем и проверяем.
