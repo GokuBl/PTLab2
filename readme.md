@@ -145,3 +145,36 @@ public class HomeController : Controller
 </body>
 </html>
 ```
+
+### 5. Инициализируем базу тестовыми данными
+Чтобы база данных не была пустой при запуске приложения создадим специальный класс для её наполнения. В каталоге DAL создадим класс ShopInitializer:
+```c#
+public class ShopInitializer : DropCreateDatabaseAlways<ShopContext>
+{
+    protected override void Seed(ShopContext context)
+    {
+        var products = new List<Product>
+        {
+        new Product { Name = "Стол", Price = 2000 },
+        new Product { Name = "Стул", Price = 1000 },
+        new Product { Name = "Табурет", Price = 500 },
+        };
+        products.ForEach(p => context.Products.Add(p));
+        context.SaveChanges();
+        base.Seed(context);
+    }
+}
+```
+
+Затем собщим EntityFramework о том, что мы хотим использовать наш инициализатор. Для этого в файле Web.config добавим следующие строчки:
+```xml
+<entityFramework>
+...
+    <contexts>
+        <context type="example.DAL.ShopContext, example">
+            <databaseInitializer type="example.DAL.ShopInitializer, example" />
+        </context>
+    </contexts>
+...
+</entityFramework>
+```
