@@ -92,3 +92,56 @@ EntityFramework выполнит все необходимые действия 
 ```
 Выражение |DataDirectory| представляет заместитель, который указывает, что
 база данных будет создаваться в проекте в папке App_Data.
+
+### 4. Контроллер и представление
+В контроллере домашней страницы выполняем чтение данных из БД и их
+передачу в вид для отображения в браузере.
+
+```c#
+public class HomeController : Controller
+{
+    private ShopContext db = new ShopContext();
+    public ActionResult Index()
+    {
+        IEnumerable<Product> products = db.Products;
+        ViewBag.Products = products;
+        return View();
+    }
+}
+```
+
+Далее приводится код представления для отображения на домашней странице списка
+доступных товаров:
+
+```html
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Товары</title>
+</head>
+<body>
+    <div>
+        <h3>Список</h3>
+        <table>
+            <tr>
+                <td><p>Наименование</p></td>
+                <td><p>Цена</p></td>
+                <td></td>
+            </tr>
+            @foreach (var p in ViewBag.Products)
+            {
+                <tr>
+                    <td><p>@p.Name</p></td>
+                    <td><p>@p.Price</p></td>
+                    <td><p><a href="/Home/Buy/@p.ID">Купить</a></p></td>
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>
+```

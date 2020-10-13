@@ -1,4 +1,6 @@
-﻿using System;
+﻿using example.DAL;
+using example.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,8 +10,11 @@ namespace example.Controllers
 {
     public class HomeController : Controller
     {
+        private ShopContext db = new ShopContext();
         public ActionResult Index()
         {
+            IEnumerable<Product> products = db.Products;
+            ViewBag.Products = products;
             return View();
         }
 
