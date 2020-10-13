@@ -58,3 +58,37 @@ public class Purchase
     public DateTime Date { get; set; }
 }
 ```
+
+### 3. Добавление базы данных
+Для хранения данных будем использовать БД, а для доступа к ней EntityFramework. Добавим библиотеку через менеджер пакетов.
+
+Создадим контекст базы данных. Для этого создадим в проекте новый каталог DAL и добавим класс ShopContext:
+```c#
+using System;
+using System.Data.Entity;
+using example.Models;
+
+namespace example.DAL
+{
+    public class ShopContext : DbContext
+    {
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
+    }
+}
+```
+EntityFramework выполнит все необходимые действия для создания таблиц в
+базе данных по коду классов-сущностей. Такой подход принято называть Code First.
+
+В файле Web.config необходимо указать строку подключения к базе данных.
+```xml
+<configuration>
+    ...
+    <connectionStrings>
+        <add name="ShopContext" connectionString="Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;AttachDBFilename=|DataDirectory|\Products.mdf" providerName="System.Data.SqlClient"/>
+    </connectionStrings>
+    ...
+</configuration>
+```
+Выражение |DataDirectory| представляет заместитель, который указывает, что
+база данных будет создаваться в проекте в папке App_Data.
