@@ -270,3 +270,60 @@ urlpatterns = [
 ```bash
 $ python manage.py runserver
 ```
+
+### 6. REST API
+Для реализации REST API в Django обычно используется Django Rest Framework. Установим его
+```bash
+pipenv install djangorestframework
+```
+и добавим в список установленных приложений в example/settings.py
+```python
+INSTALLED_APPS = [
+    ...
+    'rest_framework',
+]
+```
+Теперь добавим класс-представление для модели Product. Для этого добавим во views.py:
+```python
+from rest_framework import viewsets
+from .serializers import ProductSerializer
+
+class ProductViewSet(viewsets.ModelViewSet):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+```
+ViewSet автоматически генерирует код для обработки действий create, retrieve, update, partial_update, delete и list, а ProductSerializer определяет как должен сериализовываться объект Product. Создадим файл shop/serializers.py и опишем его:
+```python
+from rest_framework import serializers
+
+from .models import Product
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('id', 'name', 'price')
+```
+Наконец, привяжем ProductViewSet к url в shop/urls.py
+```python
+from django.urls import path
+from rest_framework.routers import DefaultRouter
+
+from . import views
+
+router = DefaultRouter()
+router.register(r'api/products', views.ProductViewSet, basename='api-product')
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('buy/<int:product_id>/', views.PurchaseCreate.as_view(), name='buy'),
+    *router.urls
+]
+```
+Запускаем сервер
+```bash
+$ python manage.py runserver
+```
+и проверяем
+```bash
+curl http://localhost:8000/api/products/
+```
