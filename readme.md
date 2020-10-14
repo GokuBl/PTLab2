@@ -179,3 +179,37 @@ urlpatterns = [
 ```bash
 $ python manage.py runserver
 ```
+
+### 4. Инициализируем базу тестовыми данными
+Чтобы база данных не была пустой при запуске приложения, создадим фикстуру shop/fixtures/products.yaml:
+```yaml
+- model: shop.product
+  pk: 1
+  fields:
+    name: Стол
+    price: 2000
+- model: shop.product
+  pk: 2
+  fields:
+    name: Стул
+    price: 1000
+- model: shop.product
+  pk: 3
+  fields:
+    name: Табурет
+    price: 500
+```
+
+Для использования этой фикстуры нам потребуется поставить pyyaml:
+```bash
+pipenv install pyyaml
+```
+Загрузка данных в базу осуществляется командой loaddata:
+```bash
+$ python manage.py loaddata products.yaml
+Installed 3 object(s) from 1 fixture(s)
+```
+Убедимся в том, что всё прошло так, как мы ожидали:
+```bash
+$ python manage.py runserver
+```
