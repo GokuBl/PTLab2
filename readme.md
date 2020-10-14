@@ -116,3 +116,66 @@ Running migrations:
   Applying sessions.0001_initial... OK
   Applying shop.0001_initial... OK
 ```
+
+### 3. Представления, роуты и шаблоны
+Теперь создадим нашу первую страницу. Для этого нам потребуется:
+1. Написать функцию-представление в shop/views.py
+```
+from django.shortcuts import render
+
+from .models import Product
+# Create your views here.
+def index(request):
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, 'shop/index.html', context)
+```
+Здесь shop/index.html -- это расположение шаблона, а context -- словарь с переменными, которые из этого шаблона будут доступны.
+2. Создать шаблон shop/templates/shop/index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Товары</title>
+</head>
+<body>
+    <div>
+        <h3>Список</h3>
+        <table>
+            <tr>
+                <td><p>Наименование</p></td>
+                <td><p>Цена</p></td>
+                <td></td>
+            </tr>
+            {% for p in products %}
+                <tr>
+                    <td><p>{{ p.name }}</p></td>
+                    <td><p>{{ p.price }}</p></td>
+                    <td><p><a href="/buy/{{ p.id }}">Купить</a></p></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
+```
+3. Создать файл shop/urls.py с привязкой url к функции-представлению
+```python
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+```
+4. В файле example/urls.py подключить shop/urls.py к проекту
+```python
+urlpatterns = [
+    path('', include('shop.urls')),
+    path('admin/', admin.site.urls),
+]
+```
+Проверим работоспособность, запустив development-сервер:
+```bash
+$ python manage.py runserver
+```
