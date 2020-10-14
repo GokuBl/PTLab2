@@ -213,3 +213,60 @@ Installed 3 object(s) from 1 fixture(s)
 ```bash
 $ python manage.py runserver
 ```
+
+### 5. Добавляем недостающие страницы
+Приложение можно запустить и увидеть в браузере, как выглядит домашняя страница. На данной странице уже есть ссылки для покупки товаров, однако если нажать на любую из них, то будет выведена ошибка, т. к. пока что нет соответствующей страницы. Исправим это, добавив класс-представление в shop/views.py:
+```python
+from django.http import HttpResponse
+from django.views.generic.edit import CreateView
+
+class PurchaseCreate(CreateView):
+    model = Purchase
+    fields = ['product', 'person', 'address']
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return HttpResponse(f'Спасибо за покупку, {self.object.person}!')
+```
+Теперь добавим шаблон формы shop/templates/shop/purchase_form.html:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Покупка</title>
+</head>
+<body>
+    <div>
+        <h3>Покупка</h3>
+        <form method="post">{% csrf_token %}
+            <input type="hidden" value="{{ view.kwargs.product_id }}" name="product" />
+            <table>
+                <tr>
+                    <td><p>Введите свое имя </p></td>
+                    <td><input type="text" name="person" /> </td>
+                </tr>
+                <tr>
+                    <td><p>Введите адрес доставки:</p></td>
+                    <td>
+                        <input type="text" name="address" />
+                    </td>
+                </tr>
+                <tr><td><input type="submit" value="Отправить" /> </td><td></td></tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
+```
+Ну и чтобы страница открывалась по нужному адресу, добавим её в shop/urls.py:
+```python
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('buy/<int:product_id>/', views.PurchaseCreate.as_view(), name='buy'),
+]
+```
+Теперь можно запустить сервер и проверить:
+```bash
+$ python manage.py runserver
+```
