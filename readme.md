@@ -63,7 +63,7 @@ class Product(models.Model):
 ```
 2. модель покупки
 ```python
-class Purchase
+class Purchase(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     person = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
