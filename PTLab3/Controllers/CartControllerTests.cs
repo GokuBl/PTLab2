@@ -30,7 +30,7 @@ namespace PTLab3.Controllers
         {
             var products = A.Fake<List<Product>>();
             A.CallTo(() => _cartRepository.GetAllProduct()).Returns(products);
-
+            int t = 0;
             var result = _cartController.Index();
 
             result.Should().BeOfType<ViewResult>();
