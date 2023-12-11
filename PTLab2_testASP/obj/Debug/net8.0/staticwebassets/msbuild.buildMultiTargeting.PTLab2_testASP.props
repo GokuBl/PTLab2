@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\PTLab2_testASP.props" />
+</Project>

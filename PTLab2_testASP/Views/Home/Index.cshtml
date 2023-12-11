@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Товары</title>
+</head>
+<body>
+    <div>
+        <h3>Список</h3>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <td><p>Наименование</p></td>
+                <td><p>Цена</p></td>
+                <td></td>
+            </tr>
+            @foreach (var p in @Model)
+            {
+                <tr>
+                    <td><p>@p.Name</p></td>
+                    <td><p>@p.Price</p></td>
+                    <td><p><button  id="AddProductBTN @p.ID" onclick="AddProduct(@p.ID)">Купить</button></p></td>
+                </tr>
+            }
+        </table>
+        <form method="post" asp-controller="Cart" asp-action="Index">
+            <input id="ProductIDList" name="ProductIDList" />
+                <tr>
+                    <td>
+                        <button type="submit" class="btn btn-primary" style="width:150px" id="SubmitCart">Отправить</button>
+                    </td>
+                <td>
+                    <a href="/Home/Buy/test">Купить</a>
+                </td>
+                </tr>
+        </form>
+    </div>
+</body>
+<script src="js/site.js" asp-append-version="true"></script>
+</html>

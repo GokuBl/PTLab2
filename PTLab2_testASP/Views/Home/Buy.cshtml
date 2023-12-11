@@ -1,0 +1,40 @@
+﻿@{
+    Layout = null;
+}
+@model Purchase
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Покупка</title>
+</head>
+<body>
+    <div>
+        <h3>Покупка</h3>
+        <form method="post">
+            <input type="hidden" name="ProductID" />
+            <table>
+                <tr>
+                    <td><label asp-for="Person"></label></td>
+                    <td><input asp-for="Person"/> </td>
+                </tr>
+                <tr>
+                    <td><label asp-for="Address"></label></td>
+                    <td>
+                        <input asp-for="Address" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="submit" class="btn btn-primary" style="width:150px">Отправить</button>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                            Назад к списку
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

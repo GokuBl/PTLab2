@@ -1,0 +1,52 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Покупка</title>
+</head>
+<body>
+    <div>
+        <h3>Покупка</h3>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <td><p>Наименование</p></td>
+                <td><p>Цена</p></td>
+            </tr>
+            @foreach (var p in @Model)
+            {
+
+                <tr>
+                    <td><p>@p.Name</p></td>
+                    <td><p>@p.Price</p></td>
+                </tr>
+            }
+        </table>
+    </div>
+    <form method="post"  asp-action="Buy">
+        <input type="hidden" name="ProductIDList" value="@ViewData["productIdList"]" />
+        <table>
+            <tr>
+                <td><label>ФИО</label></td>
+                <td><input name="FIO" /> </td>
+            </tr>
+            <tr>
+                <td><label>Адресс</label></td>
+                <td>
+                    <input name ="Address" />
+                </td>
+            </tr>
+            <tr><td><label>Общая сумма: </label>@ViewData["TotalPrice"]</td></tr>
+            <tr>
+                <td>
+                    <button type="submit" class="btn btn-primary" style="width:150px">Отправить</button>
+                    
+                </td>
+                
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>
